@@ -242,22 +242,59 @@ promise.then(function(value){
 })
 */
 
-//Handle Multiple Promises
+// Handle Multiple Promise static methods
 
-//promise.all([promises])
+// Promise.all([promises])
+// - Returns a promise that fulfills when all input promises fulfill.
+// - The fulfilled value is an array of all results in input order.
+// - If any input promise rejects, Promise.all rejects immediately.
+// - Use when you need every promise to succeed before continuing.
+
+// Promise.any([promises])
+// - Returns a promise that fulfills as soon as one input promise fulfills.
+// - The fulfilled value is the first successful result.
+// - If all input promises reject, it rejects with an AggregateError.
+// - Use when the first successful result is enough.
+
+// Promise.allSettled([promises])
+// - Returns a promise that fulfills when all input promises settle.
+// - The fulfilled value is an array of result objects.
+// - Each result object is { status: 'fulfilled', value } or { status: 'rejected', reason }.
+// - Use when you want every outcome and do not want a single rejection to stop the whole operation.
+
+// Promise.race([promises])
+// - Returns a promise that settles as soon as the first input promise settles.
+// - The returned promise fulfills or rejects with the first settled value or reason.
+// - Use when the fastest response matters, regardless of success or failure.
+
+// Promise.resolve(value)
+// - Creates a promise already fulfilled with `value`.
+// - Equivalent to `new Promise(resolve => resolve(value))`.
+
+// Promise.reject(error)
+// - Creates a promise already rejected with `error`.
+// - Equivalent to `new Promise((resolve, reject) => reject(error))`.
 
 const BULBASAUR_POKEMONS_URL = 'https://pokeapi.co/api/v2/pokemon/bulbasaur';
 const RATICATE_POKEMONS_URL = 'https://pokeapi.co/api/v2/pokemon/raticate';
 const KAKUNA_PIKEMONS_URL = 'https://pokeapi.co/api/v2/pokemon/kakuna';
 
-function getPromise(URL){
+function getPromise(URL) {
+  // Start a network request to the given URL.
+  // `fetch(URL)` returns a promise that resolves with a Response object.
   return fetch(URL)
-  .then((response) => {
-    if(!response.ok){
-      throw new Error(`HTTP error ${response.status}`);
-    }
-    return response.json();
-  })
+    .then((response) => {
+      // If the HTTP response status is not in the 200-299 range,
+      // `response.ok` will be false.
+      // Throwing here rejects the promise chain and passes the error to .catch().
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+
+      // Parse the response body as JSON.
+      // `response.json()` returns a promise that resolves with the parsed data.
+      return response.json();
+    });
 }
 
 let promise_1 = getPromise(BULBASAUR_POKEMONS_URL);
@@ -296,19 +333,54 @@ Promise.allSettled([promise_1, promise_2, promise_3])
 */
 
 Promise.race([promise_1, promise_2, promise_3])
-.then((result)=>{
-  console.log(result);
-})
-.catch((error)=>{
-  console.error('An error Occured');
-})
+  .then((result) => {
+    console.log(result);
+  })
+  .catch((error) => {
+    console.error('An error Occured');
+  });
 
-Promise.resolve() //is same as
-let promise2 = new Promise(resolve => resolve(value));
+// Promise.resolve() is same as:
+// let promise2 = new Promise((resolve) => resolve(value));
+// Promise.reject() is same as:
+// let promise1 = new Promise((resolve, reject) => reject(error));
 
-Promise.reject() // is same as
-let promise1 = new Promise((resolve, reject) => reject(error));
+// How to use fetch and how it works:
+// 1) Call `fetch(url)` to start an HTTP request.
+// 2) `fetch` returns a promise that resolves with a Response object.
+// 3) The Response object is not the actual data; parse the body using response methods.
+// 4) Check `response.ok` or `response.status` for HTTP errors.
+// 5) Use `response.json()` to parse JSON; it returns a promise.
+// 6) Chain `.then()` to handle the parsed data and `.catch()` to handle errors.
+//
+// Example:
+// fetch('https://pokeapi.co/api/v2/pokemon/bulbasaur')
+//   .then((response) => {
+//     if (!response.ok) {
+//       throw new Error(`HTTP error ${response.status}`);
+//     }
+//     return response.json();
+//   })
+//   .then((data) => {
+//     console.log('Pokemon data:', data);
+//   })
+//   .catch((error) => {
+//     console.error('Fetch failed:', error);
+//   });
+//
+// Notes:
+// - `fetch` only rejects on network failure or if the request cannot complete.
+// - HTTP 404 or 500 still resolve the fetch promise; check `response.ok` to detect these.
+// - You can also use async/await for cleaner syntax.
+//
+// async function loadPokemon() {
+//   const response = await fetch('https://pokeapi.co/api/v2/pokemon/bulbasaur');
+//   if (!response.ok) {
+//     throw new Error(`HTTP error ${response.status}`);
+//   }
+//   const data = await response.json();
+//   console.log(data);
+// }
 
-
-//How to cancel a Promise
-//Promise cannot be cancelled only the process can be cancelled
+// How to cancel a Promise
+// Promise cannot be cancelled only the process can be cancelled
