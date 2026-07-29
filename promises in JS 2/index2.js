@@ -40,3 +40,8 @@ Promise.any(allPromise).then(value => {
   console.log(value);
 })
 */
+
+//fastest promise to settle (resolve or reject) is returned
+Promise.race(allPromise).then((value)=>{
+  console.log(value);
+})
