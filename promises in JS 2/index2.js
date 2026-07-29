@@ -1,5 +1,5 @@
 const red = new Promise(function(resolve, reject){
-  setTimeout(()=>{ reject('Error: red')}, 1000);
+  setTimeout(()=>{ resolve('red')}, 1000);
  
 })
 
@@ -42,6 +42,22 @@ Promise.any(allPromise).then(value => {
 */
 
 //fastest promise to settle (resolve or reject) is returned
+/*
 Promise.race(allPromise).then((value)=>{
   console.log(value);
+})
+*/
+
+/*
+Promise.resolve(allPromise).then(value => {
+  console.log(value);
+}).catch((error)=>{
+  console.error(`Error: ${error}`)
+})
+
+*/
+
+const promResolve = Promise.resolve(red);
+promResolve.then((result)=>{
+  console.log(result);
 })
