@@ -1,10 +1,10 @@
 const red = new Promise(function(resolve, reject){
-  setTimeout(()=>{ resolve('red')}, 1000);
+  setTimeout(()=>{ reject('Error: red')}, 1000);
  
 })
 
 const green = new Promise(function(resolve, reject){
-  setTimeout(()=>{ reject('Error: green')}, 3000);
+  setTimeout(()=>{ resolve('green')}, 3000);
  
 })
 
@@ -27,6 +27,16 @@ const blue = new Promise(function(resolve, reject){
 
 const allPromise = [red, green, blue];
 //executes all the promises and returns the result of all promises, whether they are resolved or rejected
+/*
 Promise.allSettled(allPromise).then(value =>{
   console.log(value);
 })
+*/
+
+//executes all the promises and returns the result of the first promise that is resolved
+//If all promises are rejected, it returns an AggregateError object containing all the rejection reasons.
+/*
+Promise.any(allPromise).then(value => {
+  console.log(value);
+})
+*/
