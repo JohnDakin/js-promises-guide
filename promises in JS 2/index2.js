@@ -4,7 +4,7 @@ const red = new Promise(function(resolve, reject){
 })
 
 const green = new Promise(function(resolve, reject){
-  setTimeout(()=>{ resolve('green')}, 3000);
+  setTimeout(()=>{ reject('Error: green')}, 3000);
  
 })
 
@@ -57,7 +57,15 @@ Promise.resolve(allPromise).then(value => {
 
 */
 
+/*
 const promResolve = Promise.resolve(red);
 promResolve.then((result)=>{
   console.log(result);
 })
+*/
+
+const promReject = Promise.reject(green);
+
+promReject.catch(
+  (error) => {console.error(`Error: ${error}`)}
+)
