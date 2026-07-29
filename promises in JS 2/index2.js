@@ -4,7 +4,7 @@ const red = new Promise(function(resolve, reject){
 })
 
 const green = new Promise(function(resolve, reject){
-  setTimeout(()=>{ resolve('green')}, 3000);
+  setTimeout(()=>{ reject('Error: green')}, 3000);
  
 })
 
@@ -24,3 +24,9 @@ const blue = new Promise(function(resolve, reject){
 //   console.log(value)
 // })
 
+
+const allPromise = [red, green, blue];
+//executes all the promises and returns the result of all promises, whether they are resolved or rejected
+Promise.allSettled(allPromise).then(value =>{
+  console.log(value);
+})
